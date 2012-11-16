@@ -1,0 +1,5 @@
+4
+benchmarks/STO 8 
+benchmarks/LPS 9 
+benchmarks/LPS 5 
+benchmarks/NQU 10
