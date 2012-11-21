@@ -34,8 +34,8 @@ function remap(){      #remap the sm distribution when an application comes or t
  	#total_cycle needs to plus overhead from l2 cache
 	#use for to calculate the finish_cycle of each inst=-1 program
 
-	else
-		echo "initiating the gpgpu_sim"
+#	else
+#		echo "initiating the gpgpu_sim"
 	fi
 	
 	reschedule
@@ -52,7 +52,7 @@ function echo_status(){
 }
 
 function report_cycle(){
-	echo "report cycle"
+	#echo "report cycle"
 	eval $(awk 'BEGIN{getline;print "total_cycle=$total_cycle+"$1}\
 	{num=$1;inst_count=$2;if( inst_count == "-1" ) {print "prog_num=$prog_num-1"};\
 	 print "inst_count["num"]="inst_count}' $file) #read from out.txt to update the status	
@@ -112,14 +112,14 @@ function reschedule(){
 		echo "$nextsimcycle" > in.txt #if -1 then all the applications have done their job
 	fi
 	
-	echo "next cycle is "$nextcycle
+	#echo "next cycle is "$nextcycle
 	#remap the sm cores
 	declare -i sm_aval
     declare -i n_running_prog=0
 	for i in ${!prog_isrunning[@]}
 	do
 		if [ ${prog_isrunning[$i]} = 1 ]; then
-			echo "program "$i" is now in running status" 
+			#echo "program "$i" is now in running status" 
             let n_running_prog=$n_running_prog+1
 			let sm_aval=$sys_sm_num-$sys_sm_num_occ  #sm available
 			if [ ${prog_sm_cur[$i]} != 0 ];then
@@ -161,7 +161,7 @@ function reschedule(){
 				fi	
 			fi			
 		elif [ ${prog_isrunning[$i]} = -1 ];then
-			echo "program "$i" has finished "
+			#echo "program "$i" has finished "
 			let sys_sm_num_occ-=${prog_sm_cur[$i]}
 			prog_sm_cur[$i]=0
 		fi
@@ -176,7 +176,7 @@ function reschedule(){
 			echo "$i ${prog_path[i]} ${prog_sm_cur[i]} ${inst_count[i]}" >> in.txt
 		fi
 	done
-	echo "The remap has already done, the simulation will continue..."
+	#echo "The remap has already done, the simulation will continue..."
 	
 }
 
@@ -205,10 +205,10 @@ do
     if [ "$nextcycle" == "$max_sim_cycle" ]; then
         break
     fi
-    echo "The gpgpu_sim is doing the simulation..."
-    echo_status
+    #echo "The gpgpu_sim is doing the simulation..."
+    #echo_status
     remap noninit
 done
 
-echo -e "All the program have be tested. the cycle will be reported\n....."
+#echo -e "All the program have be tested. the cycle will be reported\n....."
 report_cycle

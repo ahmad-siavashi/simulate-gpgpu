@@ -46,4 +46,49 @@ def readfile(fileName)
     testcase
 end
 
-testcase=readfile("testcase")
+def cal_next_sim_cycle(sim_cycle,benchmarks,terminate_flags)
+
+end
+
+def get_running(sim_cycle,benchmarks,terminate_flags)
+end
+
+def main()
+    testcase=readfile("testcase")
+    benchmarks=testcase.benchmarks
+    sim_cycle=0
+    max_sim_cycle=testcase.max_sim_cycle
+    running_benchmarks_is=[]
+    num_benchmarks=testcase.benchmarks.size
+    terminate_flags=Array.new(num_benchmarks) {|i| false}
+    old_num_sms_array=Array.new(num_benchmarks) {|i| 0}
+    inst_counts=Array.new(num_benchmarks) {|i| 0}
+    new_num_sms_array=[]
+
+    while sim_cycle<max_sim_cycle && terminate_flags.include?(false)
+        next_sim_cycle=cal_next_sim_cycle()
+        running_benchmarks_is=get_running()
+        new_num_sms_array=cal_num_sms()
+        File.open("in.txt","w") do |file|
+            file.puts(next_sim_cycle-sim_cycle)
+            file.puts(num_benchmarks)
+            running_benchmarks_is.each do |i|
+                b=benchmarks[i]
+                file.puts("#{i} #{b.path} #{new_num_sms_array[i]} #{inst_counts}")
+            end 
+        end
+        `ruby sim2.rb >> out.txt`
+        File.open("out.txt","r") do |file|
+            new_sim_cycle=file.gets("\n").chomp("\n").to_i
+            sim_cycle=new_sim_cycle
+            running_benchmarks_is.size.times do 
+                i=file.gets(" ").chomp(" ").to_i
+                inst_counts[i]=file.gets("\n").chomp("\n").to_i
+                if inst_counts[i]==-1
+                    terminate_flags[i]=true
+                end
+            end
+        end
+    end
+end
+

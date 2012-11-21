@@ -1,4 +1,3 @@
-#require 'random.c'
 
 $min_weight=0.5
 $max_weight=1.0
@@ -38,7 +37,7 @@ class TestCase
             weight=rand*($max_weight-$min_weight)+$min_weight
             opt_sm=Integer(max_sm*weight)
             min_sm=Integer(min_sm*weight)
-            benchmarks_case=Benchmark_info.new(benchmarks[i].path,min_sm,opt_sm,rand($max_coming_time))
+            benchmarks_case=Benchmark_info.new(benchmarks[i].path,min_sm,opt_sm,rand(max_sim_cycle/2))
             @benchmarks << benchmarks_case
         end
         @benchmarks.sort! {|a,b| a.coming_time <=> b.coming_time}
@@ -52,7 +51,7 @@ def readfile(fileName)
     File.open(fileName,"r") do |file|
         num_ben=file.gets("\n").chomp.to_i
         num_ben.times {
-            path=file.gets(" ").chomp
+            path=file.gets(" ").chomp(" ")
             num_blocks=file.gets("\n").chomp.to_i
             b=Benchmark.new(path,num_blocks)
             benchmarks << b 
@@ -71,6 +70,8 @@ def writefile(testcase,fileName)
     end
 end
 
-testcase=TestCase.new(readfile("benchmarks.txt"),4,10000)
+srand(0)
+testcase=TestCase.new(readfile("benchmarks.txt"),4,5000)
 writefile(testcase,"testcase")
 print `./test.sh`
+`rm _ptx*`
