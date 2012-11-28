@@ -1,6 +1,6 @@
 simulate-gpgpu
 ==============
-This is the script source code for simulating the spatial multitasking gpgpu-sim.
+This is the script source code for simulating the spatial multitasking gpgpu-sim. Please read this file in raw mode.
 
 File descriptions:
 benchmarks/*                    Several benchmarks for testing
